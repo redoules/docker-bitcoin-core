@@ -2,15 +2,16 @@ FROM debian:stable-slim
 
 LABEL maintainer.0="João Fonseca (@joaopaulofonseca)" \
   maintainer.1="Pedro Branco (@pedrobranco)" \
-  maintainer.2="Rui Marinho (@ruimarinho)"
+  maintainer.2="Rui Marinho (@ruimarinho)" \
+  maintainer.3="Guillaume Redoulès"
 
 RUN useradd -r bitcoin \
   && apt-get update -y \
-  && apt-get install -y curl gnupg gosu \
+  && apt-get install -y curl gnupg gosu vnstat\
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ENV BITCOIN_VERSION=0.19.0.1
+ENV BITCOIN_VERSION=0.19.1
 ENV BITCOIN_DATA=/home/bitcoin/.bitcoin
 ENV PATH=/opt/bitcoin-${BITCOIN_VERSION}/bin:$PATH
 
@@ -30,6 +31,8 @@ RUN set -ex \
   && grep " bitcoin-${BITCOIN_VERSION}-x86_64-linux-gnu.tar.gz\$" SHA256SUMS.asc | sha256sum -c - \
   && tar -xzf *.tar.gz -C /opt \
   && rm *.tar.gz *.asc
+
+RUN vnstat --create -i eth0
 
 COPY docker-entrypoint.sh /entrypoint.sh
 
