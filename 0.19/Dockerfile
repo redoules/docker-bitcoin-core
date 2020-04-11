@@ -33,7 +33,6 @@ RUN set -ex \
   && rm *.tar.gz *.asc
 
 RUN vnstat --create -i eth0
-
 COPY docker-entrypoint.sh /entrypoint.sh
 
 VOLUME ["/home/bitcoin/.bitcoin"]
